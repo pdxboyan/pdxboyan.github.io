@@ -208,8 +208,6 @@ a {
 
 .articleVID2 {
   object-fit: contain;
-  margin-left: auto;
-  margin-right: auto; 
   width: 48%;
 }
 
@@ -372,6 +370,10 @@ a {
     .col-2 {
       flex: 0 0 100%;
       max-width: 100%;
+    }
+
+    .thumbnail {
+      padding-bottom: 15px;
     }
 
     .articleIMG3 {
