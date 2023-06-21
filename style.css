@@ -149,8 +149,8 @@ a {
 }
 
 .py-1 {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .py-2 {
@@ -209,8 +209,7 @@ a {
 .articleVID2 {
   object-fit: contain;
   margin-left: auto;
-  margin-right: auto;
-  padding-right: 70px;
+  margin-right: auto; 
   width: 48%;
 }
 
