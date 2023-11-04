@@ -3,7 +3,7 @@
 
 setTimeout(function() {
     location.reload();
-}, 0);
+}, 5);
 
 let toggle = document.querySelector("#header .toggle-button");
 let collapse = document.querySelectorAll("#header .collapse");
