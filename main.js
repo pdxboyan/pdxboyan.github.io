@@ -1,5 +1,5 @@
 
-// refreshes the page once after load to prevent buggy load
+// refreshes the page once after load to prevent buggy load with 5 millisecond delay
 
 setTimeout(function() {
     location.reload();
