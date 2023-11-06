@@ -1,4 +1,4 @@
-
+/*
 // refreshes the page once after load to prevent buggy load with 10 millisecond delay
 
 if (!localStorage.getItem('visited')) {
@@ -16,6 +16,7 @@ if (!localStorage.getItem('visited')) {
         }, 100); // 10-millisecond delay
     }
 }
+*/
 
 let toggle = document.querySelector("#header .toggle-button");
 let collapse = document.querySelectorAll("#header .collapse");
