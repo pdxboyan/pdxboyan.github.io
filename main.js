@@ -1,11 +1,17 @@
 
 // refreshes the page once after load to prevent buggy load with 5 millisecond delay
 
-document.addEventListener('click', function() {
+if (!localStorage.getItem('visited')) {
+    // This is the first visit, so reload the page
+    localStorage.setItem('visited', 'true');
     location.reload();
-    document.removeEventListener('click', arguments.callee);
-});
-
+} else {
+    if (sessionStorage.getItem('reloaded') !== 'true') {
+        // This is a subsequent visit, so reload the page
+        sessionStorage.setItem('reloaded', 'true');
+        location.reload();
+    }
+}
 
 let toggle = document.querySelector("#header .toggle-button");
 let collapse = document.querySelectorAll("#header .collapse");
