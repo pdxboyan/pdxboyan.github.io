@@ -1,15 +1,19 @@
 
-// refreshes the page once after load to prevent buggy load with 5 millisecond delay
+// refreshes the page once after load to prevent buggy load with 10 millisecond delay
 
 if (!localStorage.getItem('visited')) {
     // This is the first visit, so reload the page
     localStorage.setItem('visited', 'true');
-    location.reload();
+    setTimeout(function() {
+        location.reload();
+    }, 10); // 10-millisecond delay
 } else {
     if (sessionStorage.getItem('reloaded') !== 'true') {
         // This is a subsequent visit, so reload the page
         sessionStorage.setItem('reloaded', 'true');
-        location.reload();
+        setTimeout(function() {
+            location.reload();
+        }, 10); // 10-millisecond delay
     }
 }
 
