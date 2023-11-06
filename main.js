@@ -5,7 +5,7 @@ toggle.addEventListener('click', function() {
 	collapse.forEach(shrink => shrink.classList.toggle("collapse-toggle"));
 })
 
-// Masonry Library 
+// Masonry & imagesLoaded libraries 
 
 var grid = document.querySelector('.grid');
 
