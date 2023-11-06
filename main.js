@@ -1,4 +1,5 @@
 
+/*
 // refreshes the page once after load to prevent buggy load with 10 millisecond delay
 
 if (!localStorage.getItem('visited')) {
@@ -16,7 +17,7 @@ if (!localStorage.getItem('visited')) {
         }, 1000); // 10-millisecond delay
     }
 }
-
+*/
 
 let toggle = document.querySelector("#header .toggle-button");
 let collapse = document.querySelectorAll("#header .collapse");
@@ -28,6 +29,7 @@ toggle.addEventListener('click', function() {
 // Masonry Library 
 
 new Masonry("#posts .grid", {
+	columnWidth: 1200,
 	itemSelector :'.grid-item',
 	gutter :20
 });
