@@ -6,14 +6,14 @@ if (!localStorage.getItem('visited')) {
     localStorage.setItem('visited', 'true');
     setTimeout(function() {
         location.reload();
-    }, 100); // 10-millisecond delay
+    }, 1000); // 10-millisecond delay
 } else {
     if (sessionStorage.getItem('reloaded') !== 'true') {
         // This is a subsequent visit, so reload the page
         sessionStorage.setItem('reloaded', 'true');
         setTimeout(function() {
             location.reload();
-        }, 100); // 10-millisecond delay
+        }, 1000); // 10-millisecond delay
     }
 }
 
