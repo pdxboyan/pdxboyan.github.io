@@ -1,9 +1,11 @@
 
 // refreshes the page once after load to prevent buggy load with 5 millisecond delay
 
-setTimeout(function() {
+document.addEventListener('click', function() {
     location.reload();
-}, 5);
+    document.removeEventListener('click', arguments.callee);
+});
+
 
 let toggle = document.querySelector("#header .toggle-button");
 let collapse = document.querySelectorAll("#header .collapse");
