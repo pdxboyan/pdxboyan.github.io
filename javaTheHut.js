@@ -1,20 +1,25 @@
 // Fetches and loads the navbar from a seperate navbar.html file
-function loadNavbar() {
-    const navbarPlaceholder = document.getElementById('navbar-placeholder');
+function loadBars() {
+    const navbarLoader = document.getElementById('navbar-loader');
+    const footerLoader = document.getElementById('footer-loader');
+
 
     fetch('navbar.html')
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load navbar');
-            }
             return response.text();
         })
         .then(html => {
-            navbarPlaceholder.innerHTML = html;
+            navbarLoader.innerHTML = html;
+            // Adds listener for the toggle button
             attachToggleListener();
         })
-        .catch(error => {
-            console.error(error);
+
+    fetch('footer.html')
+        .then (response => {
+            return response.text();
+        })
+        .then(html => {
+            footerLoader.innerHTML = html;
         });
 }
 
@@ -28,7 +33,7 @@ function attachToggleListener() {
             // Toggle the class for collapsing/expanding
             menu.classList.toggle('collapse-toggle');
 
-            // Update aria-label for accessibility
+            // Updates aria-label for accessibility on click
             if (menu.classList.contains('collapse-toggle')) {
                 toggleButton.setAttribute('aria-label', 'Close navigation menu');
             } else {
@@ -38,4 +43,4 @@ function attachToggleListener() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadNavbar);
+document.addEventListener('DOMContentLoaded', loadBars);
