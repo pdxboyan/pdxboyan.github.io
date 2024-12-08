@@ -1,4 +1,5 @@
 // Fetches and loads the navbar from a seperate navbar.html file
+// Fetches and loads the fotter from a seperate footer.html file
 function loadBars() {
     const navbarLoader = document.getElementById('navbar-loader');
     const footerLoader = document.getElementById('footer-loader');
