@@ -238,9 +238,6 @@ footer {
 }
 
 @media(max-width: 960px) {
-    /* ----------------------------------------------
-                    Nav Bar Styling
-    ------------------------------------------------*/
     nav {
         flex-direction: column;
     }
@@ -276,10 +273,10 @@ footer {
         max-height: 500px;
       }
 
+    .grid .grid-item {
+        width: calc(50% - 20px);
+    }
 
-    /* ----------------------------------------------
-                    Main Site Styling
-    ------------------------------------------------*/
     .footer-container {
         max-width: 600px;
         margin: auto;
@@ -326,5 +323,9 @@ footer {
 
     .icon {
         padding: 0 6px 0 6px;
+    }
+
+    .grid .grid-item {
+        width: calc(100%);
     }
 }
