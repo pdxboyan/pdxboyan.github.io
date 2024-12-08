@@ -1,2 +1,4 @@
 https://stackoverflow.com/questions/31954089/how-can-i-reuse-a-navigation-bar-on-multiple-pages
 https://cubic-bezier.com/#.74,.42,.23,.98
+https://masonry.desandro.com/
+https://imagesloaded.desandro.com/
