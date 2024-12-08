@@ -1,4 +1,6 @@
 https://stackoverflow.com/questions/31954089/how-can-i-reuse-a-navigation-bar-on-multiple-pages
+https://stackoverflow.com/questions/37427212/loading-navbar-into-html-page-from-different-folders-using-javascript
 https://cubic-bezier.com/#.74,.42,.23,.98
 https://masonry.desandro.com/
 https://imagesloaded.desandro.com/
+https://fontawesome.com/icons

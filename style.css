@@ -207,7 +207,7 @@ footer {
 .featured-pic {
     height: 120px;
     width: 120px;
-    object-fit: fill;
+    object-fit: cover;
 }
 
 .contact-body {
