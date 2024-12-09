@@ -11,7 +11,7 @@
     --nav-bar: #f8f9fa;
     --nav-link: #343a40;
     --nav-link-hover: #828181; 
-    --article-background: #fbfbfb;
+    --article-background: #f7f7f7;
     --light-text: #535353;
     --light-grey: #f7f7f7;
 }
@@ -128,8 +128,15 @@ nav ul li a:hover {
     color: var(--nav-link);
 }
 
+.vid-container {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0 50px 0;
+}
+
 .img-container {
     display: flex;
+    margin: 15px 0 15px 0;
 }
 
 .three-images {
@@ -142,7 +149,7 @@ nav ul li a:hover {
     padding: 5px;
 }
 
-.one-img {
+.one-image {
     width: 100%;
     padding: 5px;
 }
@@ -171,6 +178,10 @@ nav ul li a:hover {
 .content-text {
     font-size: 16px;
     font-family: 'Bodoni Moda', serif;
+}
+
+.text-center {
+    text-align: center;
 }
 
 .date-text {
