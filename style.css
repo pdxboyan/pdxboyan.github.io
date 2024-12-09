@@ -267,6 +267,13 @@ footer {
     color: var(--light-text);
 }
 
+@media(max-width: 1290px) {
+    iframe {
+        height: 486px;
+        width: 864px;
+    }
+}
+
 @media(max-width: 960px) {
     nav {
         flex-direction: column;
@@ -307,6 +314,11 @@ footer {
         width: calc(50% - 20px);
     }
 
+    iframe {
+        height: 360px;
+        width: 640px;
+    }
+
     .footer-container {
         max-width: 600px;
         margin: auto;
@@ -330,6 +342,11 @@ footer {
 
     .feature-description {
         display: none;
+    }
+
+    iframe {
+        height: 297px;
+        width: 528px;
     }
 }
 
