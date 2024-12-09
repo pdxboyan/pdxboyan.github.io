@@ -111,7 +111,7 @@ nav ul li a:hover {
     margin: 0 auto;
 }
 
-.grid .grid-item {
+.grid-item {
     width: calc(33.333333% - 20px);
     margin-bottom: 2em;
     text-align: center;
@@ -126,6 +126,25 @@ nav ul li a:hover {
     font-weight: bold;
     font-size: 22px;
     color: var(--nav-link);
+}
+
+.img-container {
+    display: flex;
+}
+
+.three-images {
+    width: calc(33.333333% - 10px);
+    padding: 5px;
+}
+
+.two-images {
+    width: calc(50% - 10px);
+    padding: 5px;
+}
+
+.one-img {
+    width: 100%;
+    padding: 5px;
 }
 
 .article-container {
