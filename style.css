@@ -8,6 +8,7 @@
 
 :root {
     --black: #000000;
+    --green: #d0f1db;
     --nav-bar: #f8f9fa;
     --nav-link: #343a40;
     --nav-link-hover: #828181; 
@@ -139,6 +140,11 @@ nav ul li a:hover {
     margin: 15px 0 15px 0;
 }
 
+.four-images {
+    width: calc(25% - 10px);
+    padding: 5px;
+}
+
 .three-images {
     width: calc(33.333333% - 10px);
     padding: 5px;
@@ -175,13 +181,25 @@ nav ul li a:hover {
     padding-bottom: 60px;
   }
 
-.content-text {
-    font-size: 16px;
+.content-text p{
+    font-size: 17px;
     font-family: 'Bodoni Moda', serif;
 }
 
 .text-center {
     text-align: center;
+}
+
+.big-link {
+    align-self: center;
+    border: 1px solid var(--black);
+    padding: 30px;
+    margin: 40px 10px 20px 10px;
+    width: 200px;
+}
+
+.big-link:hover {
+    background-color: var(--green);
 }
 
 .date-text {
