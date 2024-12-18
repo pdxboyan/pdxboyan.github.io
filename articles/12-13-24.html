@@ -44,22 +44,22 @@
                     </p>
 
                     <pre>
-    moodRun
-    │
-    ├── templates
-    │   ├── index.html
-    │   ├── sign.html
-    │   ├── results.html
-    │   └── layout.html
-    │
-    ├── static
-    │   └── style.css
-    │
-    ├── infoModel
-    │   ├── __init__.py
-    │   └── model_datastore.py
-    │
-    └── app.py
+moodRun
+│
+├── templates
+│   ├── index.html
+│   ├── sign.html
+│   ├── results.html
+│   └── layout.html
+│
+├── static
+│   └── style.css
+│
+├── infoModel
+│   ├── __init__.py
+│   └── model_datastore.py
+│
+└── app.py
                     </pre>
 
                     <p>For the sake of keeping the codebase readable and uncluttered, I abstracted out the methods handling index, sign, and results, 
@@ -80,41 +80,41 @@
                     </p>
 
                     <pre>
-                    Commands 
-                    _____________________
+Commands 
+_____________________
 
-                    gcloud builds submit --tag   us-west1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/final-repo/moodrun
+gcloud builds submit --tag   us-west1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/final-repo/moodrun
 
-                    gcloud run deploy moodrun \
-                    --image us-west1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/final-repo/moodrun \
-                    --service-account cs430final@cloud-gankov-boga2.iam.gserviceaccount.com
-                    </pre>
+gcloud run deploy moodrun \
+--image us-west1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/final-repo/moodrun \
+--service-account cs430final@cloud-gankov-boga2.iam.gserviceaccount.com
+                </pre>
 
-                    <pre>
-    Dockerfile
-    _____________________
+                <pre>
+Dockerfile
+_____________________
 
-    # Use Google Cloud SDK's container as the base image
-    FROM google/cloud-sdk
+# Use Google Cloud SDK's container as the base image
+FROM google/cloud-sdk
 
-    # Specify your e-mail address as the maintainer of the container image
-    LABEL maintainer="boga2@pdx.edu"
+# Specify your e-mail address as the maintainer of the container image
+LABEL maintainer="boga2@pdx.edu"
 
-    # Copy the contents of the current directory into the container directory /app
-    COPY . /app
+# Copy the contents of the current directory into the container directory /app
+COPY . /app
 
-    # Set the working directory of the container to /app
-    WORKDIR /app
+# Set the working directory of the container to /app
+WORKDIR /app
 
-    # Install necessary packages
-    RUN apt-get update -y && apt-get install -y python3-pip python3-venv \
-        && python3 -m venv /env && /env/bin/pip install --no-cache-dir -r requirements.txt
+# Install necessary packages
+RUN apt-get update -y && apt-get install -y python3-pip python3-venv \
+    && python3 -m venv /env && /env/bin/pip install --no-cache-dir -r requirements.txt
 
-    # Set the PATH to use the virtual environment's Python and pip
-    ENV PATH="/env/bin:$PATH"
+# Set the PATH to use the virtual environment's Python and pip
+ENV PATH="/env/bin:$PATH"
 
-    # Set the parameters to the program
-    CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
+# Set the parameters to the program
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
                     </pre>
 
                     <p>I use a virtual environment to handle libraries, with all of the requirements listed in the requirements.txt file. I use flask & gunicorn as 
@@ -134,29 +134,29 @@
                     </p>
 
                     <pre>
-    moodRun
-    │
-    ├── templates
-    │   ├── index.html
-    │   ├── sign.html
-    │   ├── results.html
-    │   └── layout.html
-    │
-    ├── static
-    │   ├── style.css
-    │   ├── missing.png
-    │   └── spotify.png
-    │
-    ├── infoModel
-    │   ├── __init__.py
-    │   └── model_datastore.py
-    │
-    ├── app.py
-    ├── index.py
-    ├── sign.py
-    ├── results.py
-    ├── requirements.txt
-    └── Dockerfile
+moodRun
+│
+├── templates
+│   ├── index.html
+│   ├── sign.html
+│   ├── results.html
+│   └── layout.html
+│
+├── static
+│   ├── style.css
+│   ├── missing.png
+│   └── spotify.png
+│
+├── infoModel
+│   ├── __init__.py
+│   └── model_datastore.py
+│
+├── app.py
+├── index.py
+├── sign.py
+├── results.py
+├── requirements.txt
+└── Dockerfile
                     </pre>
 
                     <p>If you haven't already gotten a chance to check out the web app for yourself, or you want to look at the source code, I've linked both below, cheers!
