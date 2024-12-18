@@ -80,7 +80,7 @@
                         (effectively a big resistor). 
                     </p>
 
-                    <img src="./assets/articles/12-11-24(Ferrofluid-Sound-Visualizer)/1.jpg" width=600px height=600 style="padding:8px;" alt="Initial wiring diagram for the electromagnet control circuit.">
+                    <img src="./assets/articles/12-11-24(Ferrofluid-Sound-Visualizer)/1.jpg" class="one-image" alt="Initial wiring diagram for the electromagnet control circuit.">
 
                     <div class="img-container">
                         <img src="./assets/articles/12-11-24(Ferrofluid-Sound-Visualizer)/2.jpg" class="two-images" alt="Top down view of the actual circuit.">
@@ -146,51 +146,51 @@
                     </p>
             
                     <pre style="margin-top: 50px; margin-bottom: 50px;">
-                        test.py
-                        ________________________________________________________________________
-            
-            
-                        import machine
-                        import time
-                        import ustruct
-                        
-                        # Configuration
-                        adc = machine.ADC(26)  # Microphone connected to ADC pin 26 (GP26_A0)
-                        sampling_rate = 8000
-                        duration = 5  # (seconds)
-                        num_samples = sampling_rate * duration
-                        file_name = &quot;audio.wav&quot;
-                        
-                        # WAV file header creation
-                        # I used chatGPT to help me write this part
-                        def create_wav_header(sample_rate, bits_per_sample, channels, num_samples):
-                            byte_rate = sample_rate * channels * bits_per_sample // 8
-                            block_align = channels * bits_per_sample // 8
-                            data_chunk_size = num_samples * channels * bits_per_sample // 8
-                            file_size = 36 + data_chunk_size
-                        
-                            header = b&#39;RIFF&#39; + ustruct.pack(&lt;I&gt;, file_size) + b&#39;WAVE&#39;
-                            header += b&#39;fmt &#39; + ustruct.pack(&lt;IHHIIHH&gt;, 16, 1, channels, sample_rate, byte_rate, block_align, bits_per_sample)
-                            header += b&#39;data&#39; + ustruct.pack(&lt;I&gt;, data_chunk_size)
-                            return header
-                        
-                        # Record audio
-                        def record_audio():
-                            with open(file_name, &quot;wb&quot;) as f:
-                                # Write WAV header
-                                header = create_wav_header(sampling_rate, 16, 1, num_samples)
-                                f.write(header)
-                        
-                                # Capture ADC samples
-                                print(&quot;Recording...&quot;)
-                                for _ in range(num_samples):
-                                    sample = adc.read_u16()  # Reads the 16-bit ADC value
-                                    f.write(ustruct.pack(&lt;H&gt;, sample))  # Writes the value as an unsigned 16-bit PCM
-                                    time.sleep_us(1000000 // sampling_rate) # To maintain the sample rate
-                        
-                                print(&quot;Recording complete.&quot;)
-                        
-                        record_audio()
+    test.py
+    ________________________________________________________________________
+
+
+    import machine
+    import time
+    import ustruct
+    
+    # Configuration
+    adc = machine.ADC(26)  # Microphone connected to ADC pin 26 (GP26_A0)
+    sampling_rate = 8000
+    duration = 5  # (seconds)
+    num_samples = sampling_rate * duration
+    file_name = &quot;audio.wav&quot;
+    
+    # WAV file header creation
+    # I used chatGPT to help me write this part
+    def create_wav_header(sample_rate, bits_per_sample, channels, num_samples):
+        byte_rate = sample_rate * channels * bits_per_sample // 8
+        block_align = channels * bits_per_sample // 8
+        data_chunk_size = num_samples * channels * bits_per_sample // 8
+        file_size = 36 + data_chunk_size
+    
+        header = b&#39;RIFF&#39; + ustruct.pack(&lt;I&gt;, file_size) + b&#39;WAVE&#39;
+        header += b&#39;fmt &#39; + ustruct.pack(&lt;IHHIIHH&gt;, 16, 1, channels, sample_rate, byte_rate, block_align, bits_per_sample)
+        header += b&#39;data&#39; + ustruct.pack(&lt;I&gt;, data_chunk_size)
+        return header
+    
+    # Record audio
+    def record_audio():
+        with open(file_name, &quot;wb&quot;) as f:
+            # Write WAV header
+            header = create_wav_header(sampling_rate, 16, 1, num_samples)
+            f.write(header)
+    
+            # Capture ADC samples
+            print(&quot;Recording...&quot;)
+            for _ in range(num_samples):
+                sample = adc.read_u16()  # Reads the 16-bit ADC value
+                f.write(ustruct.pack(&lt;H&gt;, sample))  # Writes the value as an unsigned 16-bit PCM
+                time.sleep_us(1000000 // sampling_rate) # To maintain the sample rate
+    
+            print(&quot;Recording complete.&quot;)
+    
+    record_audio()
                     </pre>
             
                     <h3>audio.wav</h3>
@@ -241,112 +241,112 @@
                     </p>
             
                     <pre style="margin-top: 50px; margin-bottom: 50px;">
-                        main.py (server)
-                        ________________________________________________________________________
+    main.py (server)
+    ________________________________________________________________________
+
+
+
+
+    import network
+    import socket
+    import time
+    import machine
+    import struct
+    import ulab
+    import math
+    from machine import Pin
+    from time import sleep
+    
+    # This value was decided through qualitative testing
+    BASS_THRESHOLD = 2200
+    
+    ssid = &#39;Sorry you don't get my network name&#39;
+    password = &#39;Or the password to it&#39;
+    
+    gpio_pin = machine.Pin(7, machine.Pin.OUT)
+    
+    def connect():
+        #Connects to WLAN
+        wlan = network.WLAN(network.STA_IF)
+        wlan.active(True)
+        wlan.connect(ssid, password)
+        print(&#39;Waiting for connection...&#39;)
+        while wlan.isconnected() == False:
+            print(&#39;...&#39;)
+            sleep(1)
+        ip = wlan.ifconfig()[0]
+        print(f&#39;Connected on {ip}&#39;)
+    
+    
+    # Creates the HTTP server
+    def start_server():
+        pico_ip = &#39;192.168.1.105&#39;
+        pico_port = 8080
+    
+        # Create a socket and bind to the IP and port
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind((pico_ip, pico_port))
+        server_socket.listen(1)
+    
+        print(f&quot;Server listening on {pico_ip}:{pico_port}&quot;)
+    
+        while True:
+            # Accepts a client connection
+            client_socket, addr = server_socket.accept()
+            print(f&quot;Client connected from {addr}&quot;)
+    
+            # Receive the audio data in chunks
+            with open(&quot;received_audio.wav&quot;, &quot;wb&quot;) as audio_file:
+                while True:
+                    data = client_socket.recv(1024)  # Receive data in chunks
+                    if not data:
+                        break  # No more data
+                    data = client_socket.recv(1024)  # Receive data in chunks
+                    process_audio(data)
             
-            
-            
-            
-                        import network
-                        import socket
-                        import time
-                        import machine
-                        import struct
-                        import ulab
-                        import math
-                        from machine import Pin
-                        from time import sleep
-                        
-                        # This value was decided through qualitative testing
-                        BASS_THRESHOLD = 2200
-                        
-                        ssid = &#39;Sorry you don't get my network name&#39;
-                        password = &#39;Or the password to it&#39;
-                        
-                        gpio_pin = machine.Pin(7, machine.Pin.OUT)
-                        
-                        def connect():
-                            #Connects to WLAN
-                            wlan = network.WLAN(network.STA_IF)
-                            wlan.active(True)
-                            wlan.connect(ssid, password)
-                            print(&#39;Waiting for connection...&#39;)
-                            while wlan.isconnected() == False:
-                                print(&#39;...&#39;)
-                                sleep(1)
-                            ip = wlan.ifconfig()[0]
-                            print(f&#39;Connected on {ip}&#39;)
-                        
-                        
-                        # Creates the HTTP server
-                        def start_server():
-                            pico_ip = &#39;192.168.1.105&#39;
-                            pico_port = 8080
-                        
-                            # Create a socket and bind to the IP and port
-                            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                            server_socket.bind((pico_ip, pico_port))
-                            server_socket.listen(1)
-                        
-                            print(f&quot;Server listening on {pico_ip}:{pico_port}&quot;)
-                        
-                            while True:
-                                # Accepts a client connection
-                                client_socket, addr = server_socket.accept()
-                                print(f&quot;Client connected from {addr}&quot;)
-                        
-                                # Receive the audio data in chunks
-                                with open(&quot;received_audio.wav&quot;, &quot;wb&quot;) as audio_file:
-                                    while True:
-                                        data = client_socket.recv(1024)  # Receive data in chunks
-                                        if not data:
-                                            break  # No more data
-                                        data = client_socket.recv(1024)  # Receive data in chunks
-                                        process_audio(data)
-                                
-                                client_socket.close()
-                        
-                        # Finds the next power of 2 greater than or equal to n
-                        # This makes sure the audio samples are always a power of two
-                        def next_power_of_two(n):
-                            power = 1
-                            while power &lt; n:
-                                power *= 2
-                            return power
-                        
-                        # Process the incoming audio samples
-                        def process_audio(data):
-                            # Puts the datastream into an array for processing
-                            # We expect samples are signed 16-bit PCM
-                            num_samples = len(data) // 2 
-                            pcm_samples = struct.unpack(&#39;&lt;&#39; + &#39;h&#39; * num_samples, data)
-                            audio_samples = ulab.numpy.array(pcm_samples)
-                        
-                            desired_length = next_power_of_two(len(audio_samples))
-                            if len(audio_samples) &lt; desired_length:
-                                padding = ulab.numpy.zeros(desired_length - len(audio_samples))
-                                audio_samples = ulab.numpy.concatenate((audio_samples, padding))
-                        
-                            # Applies the FFT to the signal for processing
-                            fft_result = ulab.numpy.fft.fft(audio_samples)
-                            bass_frequencies = fft_result[0:10]  
-                        
-                            # Calculates the energy in the bass frequencies (sum of magnitudes)
-                            bass_energy = ulab.numpy.sqrt(ulab.numpy.sum(ulab.numpy.array([abs(x) for x in bass_frequencies])))
-                            print(&quot;Bass Energy:&quot;, bass_energy)
-                        
-                            # Compares the energy to the threshold (value set arbitrarily based on testing)
-                            # If the energy is higher than the threshold the pin gets set to high and the elctomagnet is turned on
-                            if bass_energy &gt; BASS_THRESHOLD:
-                                gpio_pin.on()
-                            else:
-                                gpio_pin.off()
-                        
-                        try:
-                            connect()
-                            start_server()
-                        except KeyboardInterrupt:
-                            machine.reset()
+            client_socket.close()
+    
+    # Finds the next power of 2 greater than or equal to n
+    # This makes sure the audio samples are always a power of two
+    def next_power_of_two(n):
+        power = 1
+        while power &lt; n:
+            power *= 2
+        return power
+    
+    # Process the incoming audio samples
+    def process_audio(data):
+        # Puts the datastream into an array for processing
+        # We expect samples are signed 16-bit PCM
+        num_samples = len(data) // 2 
+        pcm_samples = struct.unpack(&#39;&lt;&#39; + &#39;h&#39; * num_samples, data)
+        audio_samples = ulab.numpy.array(pcm_samples)
+    
+        desired_length = next_power_of_two(len(audio_samples))
+        if len(audio_samples) &lt; desired_length:
+            padding = ulab.numpy.zeros(desired_length - len(audio_samples))
+            audio_samples = ulab.numpy.concatenate((audio_samples, padding))
+    
+        # Applies the FFT to the signal for processing
+        fft_result = ulab.numpy.fft.fft(audio_samples)
+        bass_frequencies = fft_result[0:10]  
+    
+        # Calculates the energy in the bass frequencies (sum of magnitudes)
+        bass_energy = ulab.numpy.sqrt(ulab.numpy.sum(ulab.numpy.array([abs(x) for x in bass_frequencies])))
+        print(&quot;Bass Energy:&quot;, bass_energy)
+    
+        # Compares the energy to the threshold (value set arbitrarily based on testing)
+        # If the energy is higher than the threshold the pin gets set to high and the elctomagnet is turned on
+        if bass_energy &gt; BASS_THRESHOLD:
+            gpio_pin.on()
+        else:
+            gpio_pin.off()
+    
+    try:
+        connect()
+        start_server()
+    except KeyboardInterrupt:
+        machine.reset()
                     </pre>
             
             
@@ -364,83 +364,83 @@
                     </p>
             
                     <pre style="margin-top: 50px; margin-bottom: 50px;">
-                        audio_stream.py (client)
-                        ________________________________________________________________________
-            
-            
-            
-                        import socket
-                        import time
-                        import pygame
-                        
-                        # Server details (Pico's IP address and port)
-                        pico_ip = '192.168.1.105'
-                        pico_port = 8080
-                        
-                        # Hard coded audio path
-                        audio_file_path = "./wavs/collectathon.wav"
-                        
-                        # Hard coded sample rate
-                        sample_rate = 25000
-                        
-                        # Establishes a socket connection with Pico
-                        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        client_socket.connect((pico_ip, pico_port))
-                        
-                        # Open and play the audio file while streaming
-                        pygame.mixer.init()
-                        with open(audio_file_path, 'rb') as audio_file:
-                            print(f"Starting to stream and playback {audio_file_path}...")
-                        
-                            # Sends 1 initial chunk to help with startup lag
-                            chunk_size = 1024
-                            for _ in range(2):
-                                chunk = audio_file.read(chunk_size)
-                                if not chunk:
-                                    break
-                                client_socket.sendall(chunk)
-                        
-                            # Sleeps for 1 second and  80 milliseconds to let the streaming buffer ahead of the playback
-                            # This value was found arbitrarily to work the best through qualitative testing
-                            time.sleep(1.08)
-                        
-                            # Starts audio playback
-                            pygame.mixer.music.load(audio_file_path)
-                            pygame.mixer.music.play()
-                        
-                            # Keeps track of the total bytes sent
-                            total_sent = 0
-                            prev_time = time.time()
-                        
-                            while True:
-                                # Gets the current playback position in milliseconds
-                                current_playback_pos = pygame.mixer.music.get_pos()
-                        
-                                # Converts the current playback from milliseconds to samples
-                                current_playback_samples = (current_playback_pos / 1000) * sample_rate  
-                                current_playback_bytes = int(current_playback_samples * 2) 
-                        
-                                # Send the next chunk of data to Pico
-                                chunk = audio_file.read(chunk_size)
-                        
-                                if not chunk:
-                                    break
-                        
-                                # Send the chunk to Pico
-                                client_socket.sendall(chunk)
-                        
-                                # If the playback is ahead of the streaming, we can skip some chunks to stay in sync
-                                if current_playback_bytes > total_sent:
-                                    skip_bytes = current_playback_bytes - total_sent
-                                    skip_chunks = skip_bytes // chunk_size
-                                    for _ in range(skip_chunks):
-                                        audio_file.read(chunk_size)  # Skip enough chunks to stay in sync
-                                        total_sent += chunk_size  # Update total_sent to reflect skipped data
-                        
-                                # Update total bytes sent
-                                total_sent += len(chunk)
-                        
-                        client_socket.close()
+audio_stream.py (client)
+________________________________________________________________________
+
+
+
+import socket
+import time
+import pygame
+
+# Server details (Pico's IP address and port)
+pico_ip = '192.168.1.105'
+pico_port = 8080
+
+# Hard coded audio path
+audio_file_path = "./wavs/collectathon.wav"
+
+# Hard coded sample rate
+sample_rate = 25000
+
+# Establishes a socket connection with Pico
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((pico_ip, pico_port))
+
+# Open and play the audio file while streaming
+pygame.mixer.init()
+with open(audio_file_path, 'rb') as audio_file:
+    print(f"Starting to stream and playback {audio_file_path}...")
+
+    # Sends 1 initial chunk to help with startup lag
+    chunk_size = 1024
+    for _ in range(2):
+        chunk = audio_file.read(chunk_size)
+        if not chunk:
+            break
+        client_socket.sendall(chunk)
+
+    # Sleeps for 1 second and  80 milliseconds to let the streaming buffer ahead of the playback
+    # This value was found arbitrarily to work the best through qualitative testing
+    time.sleep(1.08)
+
+    # Starts audio playback
+    pygame.mixer.music.load(audio_file_path)
+    pygame.mixer.music.play()
+
+    # Keeps track of the total bytes sent
+    total_sent = 0
+    prev_time = time.time()
+
+    while True:
+        # Gets the current playback position in milliseconds
+        current_playback_pos = pygame.mixer.music.get_pos()
+
+        # Converts the current playback from milliseconds to samples
+        current_playback_samples = (current_playback_pos / 1000) * sample_rate  
+        current_playback_bytes = int(current_playback_samples * 2) 
+
+        # Send the next chunk of data to Pico
+        chunk = audio_file.read(chunk_size)
+
+        if not chunk:
+            break
+
+        # Send the chunk to Pico
+        client_socket.sendall(chunk)
+
+        # If the playback is ahead of the streaming, we can skip some chunks to stay in sync
+        if current_playback_bytes > total_sent:
+            skip_bytes = current_playback_bytes - total_sent
+            skip_chunks = skip_bytes // chunk_size
+            for _ in range(skip_chunks):
+                audio_file.read(chunk_size)  # Skip enough chunks to stay in sync
+                total_sent += chunk_size  # Update total_sent to reflect skipped data
+
+        # Update total bytes sent
+        total_sent += len(chunk)
+
+client_socket.close()
                     </pre>
             
                     <p>I forgot to note this, but while I was initially going to power Pico through the battery packs, for the final version I ended up opting for usb power instead. 

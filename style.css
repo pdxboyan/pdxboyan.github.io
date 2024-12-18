@@ -137,6 +137,8 @@ nav ul li a:hover {
 
 .img-container {
     display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     margin: 15px 0 15px 0;
 }
 
@@ -156,7 +158,7 @@ nav ul li a:hover {
 }
 
 .one-image {
-    width: 100%;
+    width: calc(100% - 10px);
     padding: 5px;
 }
 
@@ -188,6 +190,10 @@ nav ul li a:hover {
 
 .text-center {
     text-align: center;
+}
+
+pre {
+    white-space: pre-wrap;
 }
 
 .big-link {
@@ -285,8 +291,13 @@ footer {
     color: var(--light-text);
 }
 
+
+/* ----------------------------------------------
+                Media Queries
+------------------------------------------------*/
+
 @media(max-width: 1290px) {
-    iframe {
+    .movie {
         height: 486px;
         width: 864px;
     }
@@ -332,7 +343,15 @@ footer {
         width: calc(50% - 20px);
     }
 
-    iframe {
+    .four-images {
+        width: calc(50% - 10px);
+    }
+
+    .three-images {
+        width: calc(25% - 10px);
+    }
+
+    .movie {
         height: 360px;
         width: 640px;
     }
@@ -362,10 +381,32 @@ footer {
         display: none;
     }
 
-    iframe {
+    .movie {
         height: 297px;
         width: 528px;
     }
+
+    .four-images {
+        width: calc(100% - 10px);
+    }
+
+    .three-images {
+        width: calc(100% - 10px);
+    }
+
+    .two-images {
+        width: calc(100% - 10px);
+    }
+
+    iframe.two-images {
+        width: 770px;
+        height: 1030px;
+    }
+
+    pre {
+        font-size: smaller;
+    }    
+
 }
 
 /* This media query is for the navbar */
