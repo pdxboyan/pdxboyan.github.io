@@ -1,18 +1,19 @@
 window.onload = function () {
     var grid = document.querySelector('.grid');
 
-    // Creates a Masonry grid selecting .grid-items as the tiles
+    // Create a Masonry grid selecting .grid-items as the tiles
     var masonry = new Masonry(".grid", {
         itemSelector: '.grid-item',
         gutter: 20
     });
 
-    imagesLoaded(grid).on('progress', function() {
-        masonry.layout();
-    });
-};
+    // Get the last image by its ID
+    var lastImage = document.getElementById('last-image');
 
-imagesLoaded( grid ).on( 'progress', function() {
-  // recalculte Masonry grid after each image loads
-  masonry.layout();
-});
+    // Trigger Masonry layout only after the last image loads
+    if (lastImage) {
+        lastImage.onload = function () {
+            masonry.layout();
+        };
+    }
+};
