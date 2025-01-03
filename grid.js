@@ -3,7 +3,7 @@ window.onload = function () {
 
     // Creates a Masonry grid selecting .grid-items as the tiles
     var masonry = new Masonry(".grid", {
-        itemSelector: '.grid-item',
+        itemSelector: '.grid-item, .big-item',
         gutter: 20
     });
 

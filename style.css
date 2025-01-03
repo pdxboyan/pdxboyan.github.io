@@ -118,6 +118,12 @@ nav ul li a:hover {
     text-align: center;
 }
 
+.big-item {
+    width: calc(66.66666% - 20px);
+    margin-bottom: 2em;
+    text-align: center;
+}
+
 .cover-img {
     width: 100%;
 }
