@@ -1,3 +1,3 @@
 for file in *.JPG; do
-  mv "$file" "${file%.JPG}.jpg"
+ git mv -f "$file" "${file%.JPG}.jpg"
 done
