@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+        <!-- Adjusts the relative path of the file -->
+        <base href="../">
+
+        <!-- Icons CDN import -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <link rel="stylesheet" href="style.css" />
+        <script defer src="loadBars.js"></script>
+
+        <title>pdxboyan/roaming</title>
+    </head>
+
+    <body>
+        <header id="navbar-loader">
+        </header>
+
+        <main>
+            <section class="container">
+                    
+                <h2 class="cover-text article-title">Rust Language Analysis Report</h2>
+                <article class="article-container content-text">
+                    <img src="./assets/articles/3-26-25(Rust Analysis)/thumb.jpg" class="article-header-img" alt="ALT">
+                    
+                    <h2 id="cs358-principles-of-programming-languages-winter-2025">CS358 Principles of Programming Languages | Winter 2025</h2>
+                    <h3 id="basic-information-________________________________________________________-___-__-_-_">Basic Information <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <p>This language report is all about Rust, a language meant to exist in the same field as C/C++ while providing more safety and ease of use than either language. Originally started by Graydon Hoare in 2006 while working at Mozilla, the first stable release came out in 2015 with lots of contributions from the open source community. Rust is meant to handle a wide variety of tasks, from low level systems programming to networking and cloud services. Ultimately, the goal of Rust is to maximize the speed at which a developer can write code (like Python) while also maximizing how quickly a program will run (like C/C++). They achieve this by adding a lot of safeguards and guardrails into the compiler to prevent many common errors such as concurrency issues, as well as a novel way to manage memory without a garbage collector. Similarly to C/C++, this language compiles directly into native machine code to maximize runtime efficiency. At the time of this report, I&#39;m currently working with stable release 1.84.1. Rust has a three tiered release system -- stable releases that are the most thoroughly tested and suitable for most developers releasing every 6 weeks. The beta releases are feature frozen releases that are ironing out bugs and quirks meant to preview what the next stable release will look like - these are also released every 6 weeks offset from stable. Finally, the nightly releases are the most cutting edge (and unstable) versions of Rust you can find. These are updated daily and meant for developers who want to experiment with new features. Rust is a very well documented language, offering many resources for someone to get started with the language. Their <a href="https://www.rust-lang.org/learn">main site</a> is an index for all of the resources available for the language, including an <a href="https://doc.rust-lang.org/book/title-page.html">introductory book</a>, as well as a more detailed <a href="https://doc.rust-lang.org/reference/index.html">reference book</a> for more niche behaviors and tasks. You can also find a list of <a href="https://releases.rs/">all releases</a> as well as their <a href="https://github.com/rust-lang">github</a>. The language is governed and maintained by The Rust Foundation, a non-profit formed in 2021 with five founding corporate members (Amazon, Huawei, Google, Microsoft, and Mozilla).</p>
+                    <h3 id="compiler-________________________________________________________-___-__-_-_">Compiler <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <p>Rust&#39;s compiler <code>rustc</code> uses an LLVM (Low-Level Virtual Machine) backend to produce machine code out of Rust source code (.rs files). It works with a package manager Cargo, abstracting package installation and dependencies away from the user. It supports cross-compilation to allow developers to easily target platforms from embedded systems to web assembly for different projects. Rust does not specify an official concrete form of its grammar, in BNF (Backus–Naur form) or otherwise. The closest it gets is the <a href="https://doc.rust-lang.org/reference/lexical-structure.html">lexical structure</a> section in the reference. The grammar <em>is</em> specified within the parser component of the compiler, which someone <em>could</em> dig into due to its open source nature. There are third parties who have defined Rust&#39;s grammar in this way, but none have been adopted officially. There are 7 steps the compiler takes to produce machine code.</p>
+                    <ol>
+                    <li><p>Lexical Analysis &amp; Parsing:
+                    <code>rustc</code> first breaks the code down into tokens and organizes them into an AST (abstract syntax tree)</p>
+                    </li>
+                    <li><p>Macro Expansion:
+                    Macros such as <code>println!</code> or <code>#[derive(Debug)]</code> are expanded into regular Rust code</p>
+                    </li>
+                    <li><p>Name Resolution &amp; Type Checking:
+                    The compiler resolves variables, functions, and modules to their true definitions. Since Rust is statically typed, type errors can occur in this stage. The borrow checker also runs in this stage, guaranteeing memory safety at compile time</p>
+                    </li>
+                    <li><p>Intermediate Representations (IR):
+                    Here the compiler uses 3 separate intermediate stages to begin breaking the code down and optimizing it</p>
+                    <ul>
+                    <li>High Level IR: A slightly simplified version of the AST for the compiler to work with</li>
+                    <li>Mid Level IR: A more abstract representation of the tree where complex features (ownership or lifetimes) are transformed into simpler parts. The borrow checker runs again at this stage for a deeper check on memory</li>
+                    <li>Low Level IR: At this point the code is translated into LLVM for the next stage of optimization</li>
+                    </ul>
+                    </li>
+                    <li><p>Optimization:
+                    The LLVM framework heavily optimizes the code here by loop unrolling or removing dead code to name a couple</p>
+                    </li>
+                    <li><p>Code Generation:
+                    The optimized LLVM IR is converted into the machine code of a determined architecture (ARM, x86 etc.)</p>
+                    </li>
+                    <li><p>Linker:
+                    Here Cargo links external libraries or dependencies with the compiled code to produce the final executable file</p>
+                    </li>
+                    </ol>
+                    <h3 id="primitive-types-________________________________________________________-___-__-_-_">Primitive Types <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <h4 id="integers-floating-point-____________________">Integers &amp; Floating Point <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust natively supports integers and floating point numbers to varying degrees of size and precision. For integers, 8, 16, 32, 64, and 128 bit sizes are available in signed or unsigned variants, while floats offer 32 or 64 bit precision (both signed). All sizes rely on two&#39;s complement to compute their specific ranges. Upon integer overflow, compiling in debug mode causes your program to exit, or in Rust terminology, <code>panic!</code>. Compiling with the <code>--release</code> flag does not include this check, and performs two&#39;s complement wrapping instead of exiting. In the case of a <code>u8</code> variable, 256 would become 0, 257 would become 1 and so on. Dividing an integer by zero causes a program to <code>panic!</code> at runtime causing a crash. Dividing a float by 0 however results in either <code>inf</code> or <code>-inf</code> as defined by the IEEE standard. Performing <code>0.0 / 0.0</code> results in NaN (not a number). An example of the different types ranges and some initializations are shown in the code snippet below:</p>
+                    <pre><code><span class="hljs-comment">// i8: -128 to 127</span>
+                    <span class="hljs-comment">// u8: 0 to 255</span>
+                    <span class="hljs-comment">// ...</span>
+                    <span class="hljs-comment">// i128: -2^127 to 2^127 - 1</span>
+                    <span class="hljs-comment">// u128: 0 to 2^128 - 1</span>
+                    <span class="hljs-comment">// ...</span>
+                    <span class="hljs-comment">// f32: 7 digit precision</span>
+                    <span class="hljs-comment">// f64: 15 digit precision</span>
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> x: <span class="hljs-keyword">i32</span> = -<span class="hljs-number">42</span>;
+                        <span class="hljs-keyword">let</span> y: <span class="hljs-keyword">u32</span> = <span class="hljs-number">42</span>;
+                        <span class="hljs-keyword">let</span> big: <span class="hljs-keyword">i64</span> = <span class="hljs-number">10_000_000_000</span>;
+                        <span class="hljs-keyword">let</span> hex: <span class="hljs-keyword">u32</span> = <span class="hljs-number">0xff</span>; <span class="hljs-comment">// Hexadecimal</span>
+                        <span class="hljs-keyword">let</span> octal: <span class="hljs-keyword">u32</span> = <span class="hljs-number">0o77</span>; <span class="hljs-comment">// Octal</span>
+                        <span class="hljs-keyword">let</span> binary: <span class="hljs-keyword">u32</span> = <span class="hljs-number">0b1010_1010</span>; <span class="hljs-comment">// Binary</span>
+                    }
+                    </code></pre><h4 id="booleans-____________________">Booleans <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust has dedicated boolean types completely separate from integers. In fact, you cannot implicitly treat integers as booleans in conditional tests as you can in other languages such as C. There are no &quot;truthy&quot; or &quot;falsey&quot; values in Rust, only <code>true</code> = true and <code>false</code> = false. The boolean operators are standard (&amp;&amp; - and) (|| - or). An example of boolean types is shown below:</p>
+                    <pre><code><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> is_true: <span class="hljs-keyword">bool</span> = <span class="hljs-literal">true</span>;
+                        <span class="hljs-keyword">let</span> is_false: <span class="hljs-keyword">bool</span> = <span class="hljs-literal">false</span>;
+                    
+                        <span class="hljs-keyword">if</span> (is_false &amp;&amp; is_true) {
+                            <span class="hljs-built_in">println!</span>(<span class="hljs-string">"This won't print"</span>);
+                        }
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (is_false | is_true) {
+                            <span class="hljs-built_in">println!</span>(<span class="hljs-string">"This will print!"</span>);
+                        }
+                    }
+                    </code></pre><h4 id="strings-____________________">Strings <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>There are two string types in Rust, <code>String</code> &amp; <code>&amp;str</code>. <code>String</code> can be modified and generally hold full phrases and words, while <code>&amp;str</code> are an immutable slice of a string (A <code>&amp;str</code> can be mutable with a <code>mut</code> keyword in front of it). Both string types are encoded using UTF-8. As a result of this, slicing a string in the middle of a multi-byte character will cause your program to <code>panic!</code>. An example is shown below for how to slice a string using a <code>&amp;str</code> object.</p>
+                    <pre><code>let <span class="hljs-built_in">s1</span> = String::from(<span class="hljs-string">"HelloWorld"</span>)<span class="hljs-comment">;</span>
+                    let <span class="hljs-built_in">s2</span> = &amp;s[<span class="hljs-number">0</span>..<span class="hljs-number">4</span>]<span class="hljs-comment">;</span>
+                    println!(<span class="hljs-string">"{}"</span>, <span class="hljs-built_in">s2</span>)<span class="hljs-comment">; // "Hello"</span>
+                    </code></pre><p>Due to the danger of slicing, there is a separate safer method of iterating over strings using the built in <code>.chars()</code> function. An example using it is shown below.</p>
+                    <pre><code>  <span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">String</span>::from(<span class="hljs-string">"Hello, world"</span>);
+                      <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> s1.chars() {
+                          <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, c); <span class="hljs-comment">// Prints every character in the string on separate lines</span>
+                      }
+                    </code></pre><p>The <code>+</code> operator concatenates strings and takes a <code>String</code> &amp; <code>&amp;str</code> object to work. An example is shown below showcasing this, as well as how ownership transfers when concatenating strings.</p>
+                    <pre><code>let <span class="hljs-built_in">s1</span> = String::from(<span class="hljs-string">"Hello"</span>)<span class="hljs-comment">;</span>
+                    let <span class="hljs-built_in">s2</span> = String::from(<span class="hljs-string">", world!"</span>)<span class="hljs-comment">;</span>
+                    let <span class="hljs-built_in">s3</span> = <span class="hljs-built_in">s1</span> + &amp;<span class="hljs-built_in">s2</span><span class="hljs-comment">; // s1 gets moved, s3 now owns the new string</span>
+                    println!(<span class="hljs-string">"{}"</span>, <span class="hljs-built_in">s3</span>)<span class="hljs-comment">; // prints "Hello, world!"</span>
+                    </code></pre><p>It is possible to do the above example <em>without</em> transferring ownership by using the <code>format!</code> keyword. This keyword works the same
+                    as <code>println!</code> but copies instead of prints. An example is shown below.</p>
+                    <pre><code><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">String</span>::from(<span class="hljs-string">"Hello"</span>);
+                    <span class="hljs-keyword">let</span> s2 = <span class="hljs-built_in">String</span>::from(<span class="hljs-string">", world!"</span>);
+                    <span class="hljs-keyword">let</span> s3 = <span class="hljs-built_in">format!</span>(<span class="hljs-string">"{} {}"</span>, s1, s2); <span class="hljs-comment">// creates a brand new string s3 containing the contents of s1 &amp; s2 without altering the originals</span>
+                    
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, s1); <span class="hljs-comment">// prints "Hello"</span>
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, s2); <span class="hljs-comment">// prints ", world"</span>
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, s3); <span class="hljs-comment">// prints "Hello, world"</span>
+                    </code></pre><p>For searching operations, Rust includes <code>contains</code>, <code>starts_with</code>, and <code>find</code> as string functions. Examples of each are shown below.</p>
+                    <pre><code>let s1 = String::from(<span class="hljs-string">"Hello, world);</span>
+                    println!(<span class="hljs-string">"{}"</span>, s.contains(<span class="hljs-string">"world"</span>)); <span class="hljs-comment">// prints true</span>
+                    println!(<span class="hljs-string">"{}"</span>, s.starts_with(<span class="hljs-string">"world"</span>)); <span class="hljs-comment">// prints false</span>
+                    println!(<span class="hljs-string">"{}"</span>, s.find(<span class="hljs-string">"world"</span>).unwrap()); <span class="hljs-comment">// prints 7</span>
+                    </code></pre><p><code>.unwrap()</code> prints the position of the first letter in the match. If no sub-string is found as a match, the program will <code>panic!</code> unless the programmer explicitly handles the <code>None</code> case, or <code>.unwrap_or()</code> is used which prints a non-negative integer in the case that no matches are found.</p>
+                    <p>Rust also supports changing the case of an entire string through the <code>to_lowercase()</code> and <code>to_uppercase()</code> functions.</p>
+                    <pre><code><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">String</span>::from(<span class="hljs-string">"Hello, world"</span>);
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, s.to_lowercase()); <span class="hljs-comment">// prints "hello, world"</span>
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, s.to_uppercase()); <span class="hljs-comment">// prints "HELLO, WORLD"</span>
+                    </code></pre><h3 id="operators-precedence-in-expressions-________________________________________________________-___-__-_-_">Operators &amp; Precedence in Expressions <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <p>All of the regular arithmetic operators are allowed in expressions, however some of their uses and precedence rules differ from languages such as C++ or Python.
+                    Some of the operators behave differently depending on the context they are written in such as <code>*</code> being used for multiplication if it sits between two expressions, or defining or dereferencing a pointer next to a variable. I will go into the most notable or unique operators or rules Rust offers. The full list of operators in Rust can be found <a href="https://doc.rust-lang.org/book/appendix-02-operators.html">here</a>, while their order and precedence can be found <a href="https://doc.rust-lang.org/reference/expressions.html">here</a>. Many of the operators and expressions can also be overloaded for other types using <code>std::ops</code> or <code>std::cmp</code>.</p>
+                    <p>Auto-chaining comparisons in Rust is not allowed, as opposed to Python where a statement like <code>2 &lt; 3 &lt; 4</code> is valid, meaning (2 &lt; 3) and (3 &lt; 4). In Rust you must specify <code>2 &lt; 3 &amp;&amp; 3 &lt; 4</code>.</p>
+                    <p>In C++ and Python, programmers can freely compare different numeric types (such as ints to floats). In Rust, numeric comparisons must be between the same type, requiring the programmer to explicitly cast the comparison as a certain type. The example below compares a 32 bit integer and a 64 bit float.</p>
+                    <pre><code><span class="hljs-keyword">let</span> x: <span class="hljs-keyword">i32</span> = <span class="hljs-number">10</span>;
+                    <span class="hljs-keyword">let</span> y: <span class="hljs-keyword">f64</span> = <span class="hljs-number">10.5</span>;
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, y &lt; x <span class="hljs-keyword">as</span> <span class="hljs-keyword">i32</span>); <span class="hljs-comment">// evaluates to false (10.5 gets rounded to 11 which is not less than 10)</span>
+                    </code></pre><p><code>?</code> acts as an error propagation operator that short circuits and returns errors early. This operator can be used in functions that return <code>Result&lt;T, E&gt;</code> or <code>Option&lt;T&gt;</code> types. It is built to reduce boilerplate for error handling. An example is shown below where <code>?</code> is used to handle any errors opening the file with the passed <code>file_path</code> string.</p>
+                    <pre><code><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">readFile</span></span>(file_path: &amp;<span class="hljs-keyword">str</span>) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-built_in">String</span>, std::io::Error&gt; {
+                        <span class="hljs-keyword">let</span> content = std::fs::read_to_string(file_path)?;
+                        <span class="hljs-literal">Ok</span>(content)
+                    }
+                    </code></pre><p>The <code>..</code> and <code>..=</code> operators are unique to Rust, specifying ranges exclusively and inclusively when surrounded by integer types such as <code>1..5</code> or <code>1..=5</code>. While Python <em>does</em> include ranges, there is no way to distinguish the two. When <code>..</code> is used on its own, it indicates a full range. An example of this is shown below.</p>
+                    <pre><code>let arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
+                    let slice = &amp;arr[.<span class="hljs-number">.3</span>];  
+                    println!(<span class="hljs-string">"{:?}"</span>, slice); <span class="hljs-comment">// prints the first 3 elements "[1, 2, 3]"</span>
+                    </code></pre><p>The <code>..</code> operator is actually used in a few different contexts to perform various functions. We covered its use in ranges, but it can also be used to copy fields from another struct without modifying its existing values. An example of this below.</p>
+                    <pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span></span> { x: <span class="hljs-keyword">i32</span>, y: <span class="hljs-keyword">i32</span>, z: <span class="hljs-keyword">i32</span> }
+                    <span class="hljs-keyword">let</span> p1 = Point { x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span>, z: <span class="hljs-number">3</span> };
+                    <span class="hljs-keyword">let</span> p2 = Point { x: <span class="hljs-number">4</span>, ..p1 };
+                    
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}, {}, {}"</span>, p1.x, p1.y, p1.z); <span class="hljs-comment">// prints "1, 2 ,3"</span>
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}, {}, {}"</span>, p2.x, p2.y, p2.z); <span class="hljs-comment">// prints "4, 2, 3"</span>
+                    </code></pre><p>It also serves a purpose in <code>match</code> statements, letting the programmer ignore middle elements in array and tuple patterns. This is similar to Python&#39;s <code>*</code> used for unpacking, but within pattern matching. The example below will only print the first and last value of the array, 1 and 5.</p>
+                    <pre><code><span class="hljs-keyword">let</span> numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
+                    
+                    <span class="hljs-keyword">match</span> numbers {
+                        [<span class="hljs-built_in">first</span>, .., last] =&gt; println!(<span class="hljs-string">"First: {}, Last: {}"</span>, <span class="hljs-built_in">first</span>, last),
+                    }
+                    </code></pre><p>Other operators also behave interestingly within <code>match</code> statements. The <code>|</code> operator acts as a logical or, letting the user define multiple match values for a specific case. The pattern binding operator <code>@</code> is used exclusively in <code>match</code> statements to bind a value while also checking a condition. In the snippet below, x will evaluate to print &quot;Small number: 3&quot; in the match statement because of the pattern defined by <code>@</code>.</p>
+                    <pre><code><span class="hljs-keyword">let</span> x = <span class="hljs-literal">Some</span>(<span class="hljs-number">3</span>);
+                    <span class="hljs-keyword">match</span> x {
+                        <span class="hljs-literal">Some</span>(n @ <span class="hljs-number">1</span>..=<span class="hljs-number">4</span>) =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">"Small number: {}"</span>, n),
+                        <span class="hljs-literal">Some</span>(n) =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">"Big number: {}"</span>, n),
+                        <span class="hljs-literal">None</span> =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">"No number"</span>),
+                    }
+                    </code></pre><h4 id="let-bindings-____________________">Let Bindings <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust supports let bindings for pattern matching in multiple places such as <code>if let</code>, <code>while let</code>, and inside <code>match</code> guards. As of version 1.65, Rust does support let bindings within expressions for early returns, particularly <code>let - else</code> shown in the example below.</p>
+                    <pre><code><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get_value</span></span>(opt: <span class="hljs-built_in">Option</span>&lt;<span class="hljs-keyword">i32</span>&gt;) -&gt; <span class="hljs-keyword">i32</span> {
+                        <span class="hljs-keyword">let</span> <span class="hljs-literal">Some</span>(x) = opt <span class="hljs-keyword">else</span> { <span class="hljs-keyword">return</span> <span class="hljs-number">0</span> }; <span class="hljs-comment">// If None, return 0</span>
+                        x * <span class="hljs-number">2</span>
+                    }
+                    </code></pre><h3 id="functions-binding-scoping-________________________________________________________-___-__-_-_">Functions, Binding, Scoping <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <h4 id="functions-____________________">Functions <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Defining a function in Rust follows the general syntax shown below. The return type (if applicable) is denoted by an arrow, and the return value is either denoted by the <code>return</code> keyword before it, or by the lack of a semicolon at the end of the line. If a function does not specify a return type, it defaults to the <code>unit</code> type, or <code>()</code>. This type is similar to <code>None</code> in Python or <code>void</code> in C++. The parameters of a function must have explicit types. A programmer may pass an argument by reference, making it either mutable or immutable. This is done by placing a <code>&amp;</code> operator in front of the type, and let&#39;s the function &#39;borrow&#39; the value without taking ownership. Making it mutable requires the <code>mut</code> keyword as we&#39;ve seen before, where the function gets exclusive access to that value for it&#39;s lifetime.</p>
+                    <pre><code><span class="hljs-selector-tag">fn</span> <span class="hljs-selector-tag">function_name</span>(<span class="hljs-attribute">param1</span>: Type1, <span class="hljs-attribute">param2</span>: &amp;Type2, <span class="hljs-attribute">param3</span>: &amp;mut Type3) <span class="hljs-selector-tag">-</span>&gt; <span class="hljs-selector-tag">ReturnType</span> {
+                        <span class="hljs-selector-tag">block</span> ...
+                        ...
+                        <span class="hljs-selector-tag">return_value</span>
+                    }
+                    </code></pre><p>Mutually recursive functions don&#39;t have any special syntax and are allowed in Rust. The example below checks whether a number is even or odd using mutually recursive functions.</p>
+                    <pre><code><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">is_even</span></span>(n: <span class="hljs-keyword">u32</span>) -&gt; <span class="hljs-keyword">bool</span> {
+                        <span class="hljs-keyword">if</span> n == <span class="hljs-number">0</span> {
+                            <span class="hljs-literal">true</span>
+                        } <span class="hljs-keyword">else</span> {
+                            is_odd(n - <span class="hljs-number">1</span>)
+                        }
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">is_odd</span></span>(n: <span class="hljs-keyword">u32</span>) -&gt; <span class="hljs-keyword">bool</span> {
+                        <span class="hljs-keyword">if</span> n == <span class="hljs-number">0</span> {
+                            <span class="hljs-literal">false</span>
+                        } <span class="hljs-keyword">else</span> {
+                            is_even(n - <span class="hljs-number">1</span>)
+                        }
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, is_even(<span class="hljs-number">4</span>)); <span class="hljs-comment">// true</span>
+                        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, is_odd(<span class="hljs-number">4</span>));  <span class="hljs-comment">// false</span>
+                    }
+                    </code></pre><p>Rust allows for functions to be nested as well. The syntax for defining them is the same, just nested within another function. In the example below we wrap the two functions into a more abstracted &quot;check_number&quot; function.</p>
+                    <pre><code><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">check_number</span></span>(n: <span class="hljs-keyword">u32</span>) -&gt; <span class="hljs-keyword">bool</span> {
+                        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">is_even</span></span>(n: <span class="hljs-keyword">u32</span>) -&gt; <span class="hljs-keyword">bool</span> {
+                            <span class="hljs-keyword">if</span> n == <span class="hljs-number">0</span> {
+                                <span class="hljs-literal">true</span>
+                            } <span class="hljs-keyword">else</span> {
+                                is_odd(n - <span class="hljs-number">1</span>)
+                            }
+                        }
+                    
+                        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">is_odd</span></span>(n: <span class="hljs-keyword">u32</span>) -&gt; <span class="hljs-keyword">bool</span> {
+                            <span class="hljs-keyword">if</span> n == <span class="hljs-number">0</span> {
+                                <span class="hljs-literal">false</span>
+                            } <span class="hljs-keyword">else</span> {
+                                is_even(n - <span class="hljs-number">1</span>)
+                            }
+                        }
+                    
+                        is_even(n)
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, check_number(<span class="hljs-number">7</span>)); <span class="hljs-comment">// false</span>
+                    }
+                    </code></pre><p>Functions can also be passed as arguments to other functions in Rust using the <code>fn</code> type in the parameter definition. You can see an example of this below.</p>
+                    <pre><code><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">add_one</span></span>(x: <span class="hljs-keyword">i32</span>) -&gt; <span class="hljs-keyword">i32</span> {
+                        x + <span class="hljs-number">1</span>
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">apply_function</span></span>(f: <span class="hljs-function"><span class="hljs-keyword">fn</span></span>(<span class="hljs-keyword">i32</span>) -&gt; <span class="hljs-keyword">i32</span>, value: <span class="hljs-keyword">i32</span>) -&gt; <span class="hljs-keyword">i32</span> {
+                        f(value)
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> result = apply_function(add_one, <span class="hljs-number">5</span>);
+                        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, result); <span class="hljs-comment">// Prints: 6</span>
+                    }
+                    </code></pre><p>Similarly to when we pass functions as arguments, we can also use them as callbacks by storing them in data structures using function pointers. The example below shows the square function being used as a callback with pointers.</p>
+                    <pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Callback</span></span> {
+                        func: <span class="hljs-function"><span class="hljs-keyword">fn</span></span>(<span class="hljs-keyword">i32</span>) -&gt; <span class="hljs-keyword">i32</span>,
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">square</span></span>(x: <span class="hljs-keyword">i32</span>) -&gt; <span class="hljs-keyword">i32</span> {
+                        x * x
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> cb = Callback { func: square }; <span class="hljs-comment">// Stores function in the struct</span>
+                        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, (cb.func)(<span class="hljs-number">4</span>)); <span class="hljs-comment">// Calls square(4), prints 16</span>
+                    }
+                    </code></pre><p>Lambda expressions or anonymous functions are defined as closures in Rust. The input parameters are inside vertical bars, and the function body implicitly returns as a single expression. Multiple expressions in a closure need curly braces like a regular function, and the return needs to be explicit as well. Closures do have <em>some</em> restrictions put on them. A closure cannot call itself recursively, nor can it call another closure. Like functions, closures must have explicit typing. An example of a multi-expression closure is defined below.</p>
+                    <pre><code><span class="hljs-keyword">let</span> closure = |x: <span class="hljs-keyword">i32</span>| {
+                        <span class="hljs-keyword">let</span> doubled = x * <span class="hljs-number">2</span>;
+                        doubled + <span class="hljs-number">1</span>
+                    };
+                    
+                    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, closure(<span class="hljs-number">5</span>)); <span class="hljs-comment">// Prints: 11</span>
+                    </code></pre><p>Function values can be returned by other functions as well, with different syntax and methods for closures rather than named functions. Named functions can be returned through function pointers <code>fn() -&gt; T</code> because they have a fixed size and thus can be returned directly. Closures on the other hand do <em>not</em> have a fixed size, and either require to be explicitly boxed, or returned with <code>impl Fn(T)</code> if the closure always returns the same type.</p>
+                    <h4 id="binding-scoping-____________________">Binding &amp; Scoping <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust contains strict rules in order to keep the language memory safe by preventing null references, memory leaks, and race conditions. One interesting feature is shadowing. The example below shows how x is redefined to a different type. This is different from mutation - the variable was replaced from a string to a number.</p>
+                    <pre><code><span class="hljs-attribute">let x</span> = <span class="hljs-string">"hello"</span>;
+                    <span class="hljs-attribute">let x</span> = x.len();
+                    </code></pre><p>Most types in Rust are moved instead of copied. As we saw with strings, concatenating two strings gives ownership to the final string variable, taking value from its originator. Passing a variable to a function works the same way, moving ownership into the scope of the function unless it is passed by reference. Rust also has a borrowing system, where you can use a value without taking ownership of it. An immutable borrow allows for the value to be read, but not modified. There can be multiple immutable borrowers of the same value. Mutable borrowing allows for the value to be modified, but there can only be one mutable borrower at a time for any given value. The original value can&#39;t be used while there is a mutable borrower holding the value. Similarly, there cannot be any immutable borrowers of a value while there is a mutable borrower. Unlike Python&#39;s global declarations, global variables can only be mutated within <code>unsafe</code> blocks of code in Rust. This is done with the <code>static mut</code> keyword in front of the variable.</p>
+                    <p>By default, Rust supports static binding. Because it aims to optimize runtime, Rust resolves function calls and variable types at compile time. It is possible to use dynamic binding however, using trait objects with <code>dyn Trait</code>. This allows for dynamic dispatch, meaning the function calls will be resolved at runtime. This is a more expensive operation, but can be useful when dealing with polymorphism.</p>
+                    <h3 id="statements-control-________________________________________________________-___-__-_-_">Statements &amp; Control <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <p>In Rust there are a few different forms of atomic statements. Variable declarations using the <code>let</code> keyword are atomic and cannot be used in expressions. Both <code>break</code> and <code>continue</code> are atomic statements used in loops to direct control flow. Any expression that appears alone is treated as a statement, and the result is discarded. If you have the line:</p>
+                    <pre><code>x + <span class="hljs-number">5</span>;
+                    </code></pre><p>This is treated as an atomic statement. Assignment is also an atomic statement, and doesn&#39;t return anything as a result. The code below will result in an error since <code>=</code> doesn&#39;t actually return anything in Rust.</p>
+                    <pre><code><span class="hljs-keyword">let</span> <span class="hljs-attr">y</span> = (<span class="hljs-attr">x</span> = <span class="hljs-number">1</span>) + <span class="hljs-number">2</span>;
+                    </code></pre><p>There are no traditional exceptions in Rust such as the <code>try - except</code> blocks found in Python. Rust handles recoverable errors through the <code>Result&lt;T, E&gt;</code> and <code>Option&lt;T&gt;</code> types. This can be used to handle both good and bad cases throughout a program using <code>Ok(T)</code> and <code>Err(E)</code>. These types are often used in conjunction with the <code>?</code> operator to propagate any errors that might occur. The simple example below shows how <code>Ok</code> and <code>Err</code> could be used to handle opening a file from the Rust Reference. Source <a href="https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html">here</a>.</p>
+                    <pre><code><span class="hljs-keyword">use</span> std::fs::File;
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> greeting_file_result = File::open(<span class="hljs-string">"hello.txt"</span>);
+                    
+                        <span class="hljs-keyword">let</span> greeting_file = <span class="hljs-keyword">match</span> greeting_file_result {
+                            <span class="hljs-literal">Ok</span>(file) =&gt; file,
+                            <span class="hljs-literal">Err</span>(error) =&gt; <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"Problem opening the file: {error:?}"</span>),
+                        };
+                    }
+                    </code></pre><h4 id="sequencing-control-statements-____________________">Sequencing Control Statements <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Similarly to C++, Rust features <code>blocks</code> and <code>;</code> used as a separator between expressions. Blocks of code are denoted by an open curly brace followed by the statements or expressions and a closed curly brace, ie: <code>{ ... }</code>. Expressions must be separated with <code>;</code> unless it is the last expression in the block, signifying the return statement. If the last expression <em>does</em> include the <code>;</code>, it will return the <code>unit type</code> or <code>()</code>.</p>
+                    <h4 id="selection-control-statements-____________________">Selection Control Statements <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>We have touched on many of Rust&#39;s selection control statements throughout this report. <code>if</code> statements can be used normally just as in other languages, but they can also be used in place of the ternary operator to return an expression, shown below.</p>
+                    <pre><code><span class="hljs-keyword">let</span> <span class="hljs-attr">x</span> = <span class="hljs-number">10</span>;
+                    <span class="hljs-keyword">let</span> <span class="hljs-attr">y</span> = <span class="hljs-keyword">if</span> x &gt; <span class="hljs-number">5</span> { <span class="hljs-string">"big"</span> } <span class="hljs-keyword">else</span> { <span class="hljs-string">"small"</span> };
+                    println!(<span class="hljs-string">"{}"</span>, y); // Prints: big
+                    </code></pre><p>Rust&#39;s <code>match</code> statements are powerful control statements that can pattern match on values, allow destructuring, and guards. This is Rust&#39;s equivalent to switch case, or match case statements in other languages. <code>if let</code> statements provide simpler pattern matching where a <code>match</code> isn&#39;t needed.</p>
+                    <h4 id="iteration-control-statements-____________________">Iteration Control Statements <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust offers the basic iteration control statements like <code>while</code> and <code>for</code>, but provides more flexible uses for them. Basic <code>while</code> loops work the same as most other languages, but Rust also offers <code>while let</code> statements for looping with pattern matching. This will keep the loop running as long as the given pattern matches the context. The <code>loop</code> statement is an infinite loop like a <code>while(true)</code> found in other languages. This will keep looping until it encounters a <code>break</code> statement. <code>for</code> loops have the capability to loop over a specified range (using <code>..</code> or <code>..=</code>), collections (like an array), or iterators. Rust provides iterators for collections like <code>vec</code>, <code>array</code>, or <code>HashMap</code>. Rust also allows programmers to define custom iterators using the <code>Iterator</code> trait. Iterators can use built in functional methods such as <code>map</code>, <code>filter</code>, <code>fold</code>, or <code>take</code> as different filters. Rust also let&#39;s the programmer define loop labels to break out of multiple loops at the same time. The example below shows how this can be used within multiple <code>for</code> loops.</p>
+                    <pre><code><span class="hljs-symbol">'outer</span>: <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>..=<span class="hljs-number">3</span> {
+                        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>..=<span class="hljs-number">3</span> {
+                            <span class="hljs-keyword">if</span> i == <span class="hljs-number">2</span> &amp;&amp; j == <span class="hljs-number">2</span> {
+                                <span class="hljs-keyword">break</span> <span class="hljs-symbol">'outer</span>;
+                            }
+                        }
+                    }
+                    <span class="hljs-comment">// break goes here!</span>
+                    </code></pre><h3 id="data-structures-________________________________________________________-___-__-_-_">Data Structures <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <h4 id="simple-product-types-____________________">Simple Product Types <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust offers two simple product types, tuples and structs, both allowing heterogenous typing. Tuples are immutable by default, but can be made mutable with the <code>mut</code> keyword when defining them. It is important to note that individual fields cannot be made mutable in a tuple, its all or nothing. structs are similarly immutable by default, but individual fields <em>can</em> be made mutable by choice of the programmer. Tuples are always unboxed structures (stored directly on the stack), while structs are only unboxed by default. Using the <code>Box</code> keyword, a programmer can force a struct to be boxed (stored on the heap) if they are dealing with a particularly large struct, or the struct contains recursive definitions. Both tuples and structs require static indexing; struct fields must be accessed by name, and tuple indices must be constants. Both are checked at compile time. Below is an example of a simple tuple and struct both defining coordinate points.</p>
+                    <pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span></span> {
+                        x: <span class="hljs-keyword">i32</span>,
+                        y: <span class="hljs-keyword">i32</span>,
+                        c: <span class="hljs-keyword">char</span>,
+                    }
+                    
+                    <span class="hljs-keyword">let</span> pointTup: (<span class="hljs-keyword">i32</span>, <span class="hljs-keyword">i32</span>, <span class="hljs-keyword">char</span>) = (<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-string">'x'</span>)
+                    </code></pre><h4 id="sum-types-____________________">Sum Types <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust has a built-in sum type called <code>enum</code> that allows a programmer to define a variable that could be one of a few different types. The example below defines a &#39;shape&#39; <code>enum</code> which could potentially be a circle or a rectangle, with different definitions for each type. Rust has a built in <code>Option&lt;T&gt;</code> type as well, which can represent some type, or nothing. Commonly used to wrap values, this type is actually implemented in the backend using an <code>enum</code>, shown below.</p>
+                    <pre><code><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Option</span>&lt;<span class="hljs-title">T</span>&gt; {</span>
+                        Some(T),
+                        None,
+                    }
+                    
+                    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Shape</span> {</span>
+                        Circle(f64),        <span class="hljs-regexp">//</span> Radius
+                        Rectangle(f64, f64) /<span class="hljs-regexp">/ Width, Height
+                    }</span>
+                    </code></pre><h4 id="arrays-____________________">Arrays <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust offer three separate array types: arrays, vectors, and hash maps. Arrays are the most simple of the types, and require homogenous typing as well as fixed length at compile time. They are indexed with integers <code>usize</code> and defined as unboxed structures. Vectors are similar in that they require homogenous typing and are indexed with integers, however they are defined as boxed structures, and can be resized dynamically. Dynamic indexing of arrays and vectors is allowed, but out of bounds access will cause the program to <code>panic!</code>. Hash maps offer key-value storage similar to Python&#39;s dictionaries. These structures are boxed, and can be resized dynamically. Key and value pairs can be different types, and the keys are looked up dynamically at runtime. Primitives, strings, and tuples are all valid key types. Floating point keys are allowed but discouraged due to precision issues. Simple forms of each structure are defined below.</p>
+                    <pre><code><span class="hljs-keyword">use</span> std::collections::HashMap;
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> map = HashMap::new();
+                    
+                        map.insert(<span class="hljs-string">"one"</span>, <span class="hljs-number">1</span>);
+                        map.insert(<span class="hljs-string">"two"</span>, <span class="hljs-number">2</span>);
+                    
+                        <span class="hljs-keyword">let</span> arr: [<span class="hljs-keyword">i32</span>; <span class="hljs-number">2</span>] = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>];
+                    
+                        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> v: <span class="hljs-built_in">Vec</span>&lt;<span class="hljs-keyword">i32</span>&gt; = <span class="hljs-built_in">vec!</span>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>];
+                    }
+                    </code></pre><h4 id="creating-an-ast-type-____________________">Creating an AST Type <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Defining an abstract syntax tree type in Rust would probably be best using an <code>enum</code> along with <code>Box&lt;T&gt;</code> for any recursive definitions. The <code>enum</code> could define the different types used by the language, as well as the structures for each of the statements and expressions.</p>
+                    <h4 id="comparing-structures-____________________">Comparing Structures <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust only supports structural equality (comparing the values), unlike Java for example which supports referential equality for its data structures (comparing the objects&#39; memory addresses). The only case where Rust supports referential equality is in pointers through <code>std::ptr::eq</code>.</p>
+                    <h3 id="type-systems-________________________________________________________-___-__-_-_">Type Systems <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <p>Rust supports polymorphic or generic types for both functions and data structures. The syntax for this is to add a <code>&lt;T&gt;</code> in front of the definition. This allows for more efficient code reusability for multiple types without having to redefine a function over and over. This can be applied to functions, structs, enums, and traits.</p>
+                    <p>Rust has strong type inference, in addition to being statically typed. This means that the compiler needs to know what type each variable is, but it can infer this based on the way variables are used. Closures and iterators also utilize type inference to decide what the type is of the variables being passed to them. Examples for each are shown below.</p>
+                    <pre><code><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> x = <span class="hljs-number">42</span>;      <span class="hljs-comment">// Inferred as i32</span>
+                        <span class="hljs-keyword">let</span> y = <span class="hljs-number">3.14</span>;    <span class="hljs-comment">// Inferred as f64</span>
+                        <span class="hljs-keyword">let</span> name = <span class="hljs-string">"Rust"</span>; <span class="hljs-comment">// Inferred as &amp;str</span>
+                    
+                        <span class="hljs-keyword">let</span> multiply = |x, y| x * y;  <span class="hljs-comment">// Compiler infers x &amp; y are i32</span>
+                        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"{}"</span>, multiply(<span class="hljs-number">4</span>, <span class="hljs-number">5</span>));
+                    }
+                    </code></pre><p>Rust goes far beyond type checking during static analysis to ensure safety and performance in compilation. The first three stages in the compiler that we saw above all fall under static analysis. Some static analysis happens during the first stage, or parsing stage. Once an AST is created, Rust ensures that all variables and functions are declared before they are used. This is also where scoping rules are checked. After the next stage — type checking, Rust runs the ownership and borrow checker, which makes sure that no rules are being broken about value access or sharing. Next is the lifetime checker, which detects if references outlive the data they point to. Rust then performs an exhaustive check on <code>match</code> statements to ensure pattern matching covers all cases. In the final part of static analysis Rust finds any unused variables, functions, or imports and throws warnings about them. Rust&#39;s compiler was built to optimize runtime performance and safety, not compile time, which shows.</p>
+                    <h3 id="memory-________________________________________________________-___-__-_-_">Memory <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <p>Rust includes a novel way of managing memory without a garbage collector. Using the ownership and borrowing system that we&#39;ve touched on above, Rust ensures that any handling of variables is done in a safe manner. Once a variable falls out of scope and is unused, Rust will detect this and free the memory in the heap automatically. The <code>Drop</code> trait can be used to define custom logic before an object is deallocated both for primitive and custom types. A programmer can also explicitly deallocate memory early by using <code>std::mem::drop</code>. This strict system makes it much harder to fall into simple pitfalls surrounding memory management, while also getting rid of the runtime overhead of using a garbage collector.</p>
+                    <h3 id="objects-modules-________________________________________________________-___-__-_-_">Objects &amp; Modules <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> <strong>_ </strong> <em> </em></h3>
+                    <h4 id="programming-methods-____________________">Programming Methods <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust supports methods to program in functional, procedural, and object-oriented styles. Focusing on the object-oriented paradigm, Rust is different from Java or C++ in that it does not have traditional classes or inheritance. Structs are used in place of classes, with <code>impl</code> blocks to define their methods for encapsulation. Rust relies on traits to provide polymorphism in place of traditional class inheritance. Trait objects allow for dynamic dispatch similar to C++&#39;s virtual functions using the <code>dyn</code> keyword. Subtyping can be achieved through generics to keep code reuse higher. A simple example of some code written in OOP style below where a Bike is of a broader type Vehicle.</p>
+                    <pre><code><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Vehicle</span></span> {
+                        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">drive</span></span>(&amp;<span class="hljs-keyword">self</span>);
+                    }
+                    
+                    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Bike</span></span>;
+                    <span class="hljs-keyword">impl</span> Vehicle <span class="hljs-keyword">for</span> Bike {
+                        <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">drive</span></span>(&amp;<span class="hljs-keyword">self</span>) {
+                            <span class="hljs-built_in">println!</span>(<span class="hljs-string">"You go zoooooooom!"</span>);
+                        }
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">start_trip</span></span>&lt;T: Vehicle&gt;(v: &amp;T) {
+                        v.drive();
+                    }
+                    
+                    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+                        <span class="hljs-keyword">let</span> bike = Bike;
+                        start_trip(&amp;bike); <span class="hljs-comment">// You go zoooooooom!</span>
+                    }
+                    </code></pre><h4 id="modules-submodules-____________________">Modules &amp; Submodules <strong><strong><strong><strong><em>__</em></strong></strong></strong></strong></h4>
+                    <p>Rust has a module system for organizing code into separate files and namespaces to help with organization. 
+                        A module is defined with the <code>mod</code> keyword, and it&#39;s contents are private by default unless marked public with the 
+                        <code>pub</code> keyword. The <code>use</code> 
+                        keyword is used to import module items into a program, where you can also specify a function within the module to import by using 
+                        <code>use module::function;</code>. 
+                        Modules can also be nested in one another for more abstraction if necessary. Submodules can be defined in other modules through 
+                        <code>pub mod submodule_name;</code> in the parent module file.  </p>                    
+                </article>
+            </section>
+        </main>
+
+        <footer id="footer-loader">
+        </footer>
+
+    </body>
+</html>
